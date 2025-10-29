@@ -2,39 +2,48 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 
-st.set_page_config(
-    page_title="Vitamin C AI Advisor",
-    page_icon="🍊",
-    layout="centered"
-)
+# Configure page
+st.set_page_config(page_title="Vitamin C AI", page_icon="🍊")
 
+# AI Model
 class VitaminCPredictor:
     def __init__(self):
         self.weights = np.array([0.3, 0.4, 0.2, 0.1])
         self.bias = 0.1
-        
-    def predict(self, user_data):
+    
+    def predict(self, age, diet, stress, sleep):
+        user_data = [age, diet, stress, sleep]
         linear_output = np.dot(user_data, self.weights) + self.bias
         return 1 / (1 + np.exp(-linear_output))
 
+# Initialize AI
 ai = VitaminCPredictor()
 
-st.title("🍊 Vitamin C Effectiveness AI Advisor")
-st.markdown("Discover your personalized Vitamin C supplementation needs!")
+# App title
+st.title("🍊 Vitamin C AI Advisor")
 
-st.header("📊 Your Health Profile")
+# User inputs
+st.header("Your Health Profile")
+age = st.slider("Age", 18, 80, 35)
+diet = st.slider("Diet Quality (1-10)", 1, 10, 5)
+stress = st.slider("Stress Level (1-10)", 1, 10, 5)
+sleep = st.slider("Sleep Quality (1-10)", 1, 10, 6)
 
-col1, col2 = st.columns(2)
-with col1:
-    age = st.slider("Age", 18, 80, 35)
-    diet = st.slider("Diet Quality (1-10)", 1, 10, 5)
-with col2:
-    stress = st.slider("Stress Level (1-10)", 1, 10, 5)
-    sleep = st.slider("Sleep Quality (1-10)", 1, 10, 6)
-
-if st.button("🧪 Analyze Vitamin C Needs", type="primary"):
-    user_data = [age, diet, stress, sleep]
-    score = ai.predict(user_data)
+# Calculate results
+if st.button("Analyze Vitamin C Needs"):
+    score = ai.predict(age, diet, stress, sleep)
+    
+    # Display results
+    st.header("Results")
+    st.metric("Effectiveness Score", f"{score:.1%}")
+    
+    # Recommendation
+    if score > 0.7:
+        st.success("HIGH PRIORITY: Strong benefit from Vitamin C (1000mg)")
+    elif score > 0.4:
+        st.info("MODERATE PRIORITY: May benefit from Vitamin C (500mg)")
+    else:
+        st.warning("LOW PRIORITY: Focus on lifestyle first")    score = ai.predict(user_data)
     
     st.header("🎯 Results")
     

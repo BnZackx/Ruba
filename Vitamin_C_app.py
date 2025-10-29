@@ -43,7 +43,8 @@ if st.button("Analyze Vitamin C Needs"):
     elif score > 0.4:
         st.info("MODERATE PRIORITY: May benefit from Vitamin C (500mg)")
     else:
-        st.warning("LOW PRIORITY: Focus on lifestyle first")    score = ai.predict(user_data)
+       st.warning("LOW PRIORITY: Focus on lifestyle first")
+score = ai.predict(user_data) 
     
     st.header("🎯 Results")
     

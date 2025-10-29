@@ -45,9 +45,6 @@ if st.button("Analyze Vitamin C Needs"):
     else:
        st.warning("LOW PRIORITY: Focus on lifestyle first")
 score = ai.predict(user_data) 
-    
-    st.header("🎯 Results")
-    
     col1, col2, col3 = st.columns(3)
     with col1:
         st.metric("Effectiveness Score", f"{score:.1%}")

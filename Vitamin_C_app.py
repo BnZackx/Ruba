@@ -35,16 +35,7 @@ if st.button("Analyze Vitamin C Needs"):
     
     # Display results
     st.header("Results")
-    st.metric("Effectiveness Score", f"{score:.1%}")
     
-    # Recommendation
-    if score > 0.7:
-        st.success("HIGH PRIORITY: Strong benefit from Vitamin C (1000mg)")
-    elif score > 0.4:
-        st.info("MODERATE PRIORITY: May benefit from Vitamin C (500mg)")
-    else:
-       st.warning("LOW PRIORITY: Focus on lifestyle first")
-score = ai.predict(user_data) 
     col1, col2, col3 = st.columns(3)
     with col1:
         st.metric("Effectiveness Score", f"{score:.1%}")

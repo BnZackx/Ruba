@@ -1,6 +1,6 @@
 import streamlit as st
 import numpy as np
-import matplotlib.pyplot as plt
+import pandas as pd
 
 # Configure page
 st.set_page_config(page_title="Vitamin C AI", page_icon="🍊")
@@ -65,16 +65,12 @@ if st.button("Analyze Vitamin C Needs"):
     factors = ['Age', 'Diet', 'Stress', 'Sleep']
     contributions = np.array([age, diet, stress, sleep]) * ai.weights
     
-    fig, ax = plt.subplots(figsize=(10, 4))
-    colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4']
-    bars = ax.bar(factors, contributions, color=colors)
-    ax.set_ylabel('Impact Score')
-    
-    for bar, value in zip(bars, contributions):
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01, 
-                f'{value:.2f}', ha='center', va='bottom')
-    
-    st.pyplot(fig)
+    # Create a bar chart using Streamlit's native bar_chart
+    chart_data = pd.DataFrame({
+        'Factor': factors,
+        'Impact': contributions
+    })
+    st.bar_chart(chart_data.set_index('Factor'))
 
 with st.expander("ℹ️ About This AI"):
     st.markdown("""

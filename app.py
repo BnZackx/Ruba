@@ -119,4 +119,46 @@ predictor = load_model()
 st.markdown("""
 <div style="text-align: center; padding: 10px;">
     <h3 style="margin: 0; color: green;">BnZackx</h3>
-    <p style="margin: 0; font-size: 1.1em; color: green;">Department of Food Science and Technology, ADUSTECH
+    <p style="margin: 0; font-size: 1.1em; color: green;">Department of Food Science and Technology, ADUSTECH</p>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("---") 
+
+st.title('🌡️ Vitamin C Degradation Predictor (Kinetic Model)')
+st.markdown('### Estimate Vitamin C content remaining after thermal processing.')
+
+if predictor:
+    # --- User Input Widgets ---
+    st.header('1. Select Food and Processing Parameters')
+    
+    # Crop Selection
+    crop_type = st.selectbox(
+        'Select Crop Type:',
+        options=CROP_OPTIONS,
+        key='crop_selector'
+    )
+    
+    # Temperature Slider
+    temperature = st.slider(
+        'Processing Temperature (°C)',
+        min_value=50.0, 
+        max_value=120.0, 
+        value=85.0, 
+        step=0.5,
+        key='temperature_input_key'
+    )
+    
+    # Time Slider
+    time_duration = st.slider(
+        'Processing Time (minutes)',
+        min_value=1.0, 
+        max_value=120.0, 
+        value=15.0, 
+        step=1.0,
+        key='time_duration_key'
+    )
+
+    # --- Prediction Logic ---
+    st.markdown("---")
+    if st.button('Calculate Remaining Vitamin

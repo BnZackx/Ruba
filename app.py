@@ -45,7 +45,9 @@ class VitaminCPredictor:
         self.parameters = parameters
 
     def get_rate_constant(self, crop_type, temp_celsius):
-        """Calculates the degradation rate constant (k) in min⁻¹."""
+        """
+        Calculates the degradation rate constant (k) and converts it to min⁻¹.
+        """
         if crop_type not in self.parameters:
             return 0 
 
@@ -56,9 +58,13 @@ class VitaminCPredictor:
         # Convert Celsius to Kelvin
         T_K = temp_celsius + 273.15
         
-        # Arrhenius Equation: k = A * exp(-Ea / (R * T_K))
-        k = A * np.exp(-Ea / (R_GAS * T_K))
-        return k
+        # Arrhenius Equation: k_s is the rate constant in s⁻¹
+        k_s = A * np.exp(-Ea / (R_GAS * T_K))
+        
+        # 🟢 CORRECTION: Convert k from s⁻¹ to min⁻¹ (multiply by 60) 
+        # because the time input (t) is in minutes.
+        k_min = k_s * 60
+        return k_min
 
     def predict(self, crop_type, temp_celsius, time_min):
         """
@@ -70,14 +76,14 @@ class VitaminCPredictor:
         params = self.parameters[crop_type]
         C0 = params['C0']
         
-        # Calculate the rate constant 'k'
+        # Calculate the rate constant 'k' (now correctly in min⁻¹)
         k = self.get_rate_constant(crop_type, temp_celsius)
         
         # First-order kinetic model: Ct = C0 * exp(-k * t)
+        # k (min⁻¹) and t (min) have consistent units.
         Ct = C0 * np.exp(-k * time_min)
         
         return max(0.0, Ct)
-
 # =================================================================
 # 🛑 END OF CRITICAL CODE
 # =================================================================

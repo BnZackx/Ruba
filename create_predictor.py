@@ -1,5 +1,12 @@
+import streamlit as st
 import pickle
 import numpy as np
+import os
+
+# =================================================================
+# 🛑 START: CRITICAL CODE FROM YOUR TRAINING SCRIPT (THE RECIPE CARD)
+# This code MUST be present to successfully load the pickled object.
+# =================================================================
 
 # Gas constant in J/(mol*K)
 R_GAS = 8.314
@@ -41,7 +48,8 @@ class VitaminCPredictor:
     def get_rate_constant(self, crop_type, temp_celsius):
         """Calculates the degradation rate constant (k) in min⁻¹."""
         if crop_type not in self.parameters:
-            raise ValueError(f"Crop type '{crop_type}' not found.")
+            # We don't raise an exception here; let the main predict handle it
+            return 0 
 
         params = self.parameters[crop_type]
         Ea = params['Ea']
@@ -57,17 +65,9 @@ class VitaminCPredictor:
     def predict(self, crop_type, temp_celsius, time_min):
         """
         Predicts the final Vitamin C content (Ct) in mg/100g.
-        
-        Args:
-            crop_type (str): Name of the crop (e.g., 'Orange (Citrus sinensis)').
-            temp_celsius (float): Processing temperature in Celsius.
-            time_min (float): Processing time in minutes.
-            
-        Returns:
-            float: Predicted Vitamin C content (mg/100g).
         """
         if crop_type not in self.parameters:
-            raise ValueError(f"Crop type '{crop_type}' not found.")
+            return None # Return None if crop is not found
 
         params = self.parameters[crop_type]
         C0 = params['C0']
@@ -78,31 +78,90 @@ class VitaminCPredictor:
         # First-order kinetic model: Ct = C0 * exp(-k * t)
         Ct = C0 * np.exp(-k * time_min)
         
-        return max(0.0, Ct)
+        return max(0.0, Ct) # Ensure content is not negative
 
-if __name__ == '__main__':
-    # 1. Create an instance of the predictor
-    predictor_model = VitaminCPredictor(KINETIC_PARAMETERS)
+# =================================================================
+# 🛑 END OF CRITICAL CODE FROM YOUR TRAINING SCRIPT
+# =================================================================
 
-    # 2. Save the instance to the requested .pkl file
-    file_name = "vitamin_c_predictor.pkl"
+# --- STREAMLIT APPLICATION CODE ---
+
+MODEL_FILENAME = 'vitamin_c_predictor.pkl'
+CROP_OPTIONS = list(KINETIC_PARAMETERS.keys())
+
+@st.cache_resource
+def load_model():
+    # Since the class definition is now available, loading should work!
+    if not os.path.exists(MODEL_FILENAME):
+        # Fallback: If the .pkl is missing, instantiate the class directly 
+        # using the embedded KINETIC_PARAMETERS dictionary.
+        st.warning("Could not find the .pkl file. Using embedded KINETIC_PARAMETERS for prediction.")
+        return VitaminCPredictor(KINETIC_PARAMETERS)
+        
     try:
-        with open(file_name, 'wb') as f:
-            pickle.dump(predictor_model, f)
-        
-        print(f"Successfully created and saved the file: {file_name}")
-
-        # --- Verification Test ---
-        # Orange at 80°C for 60 min. Document value from Table 4.2 is 17.1 ± 0.5.
-        test_crop = "Orange (Citrus sinensis)"
-        test_temp = 80
-        test_time = 60
-        predicted_value = predictor_model.predict(test_crop, test_temp, test_time)
-        
-        print("\nVerification Test:")
-        print(f"Input: {test_crop} at {test_temp}°C for {test_time} min")
-        print(f"Predicted Vitamin C: {predicted_value:.2f} mg/100g")
-        print(f"Reference Value from Table 4.2: 17.1 ± 0.5 mg/100g ")
-
+        with open(MODEL_FILENAME, 'rb') as file:
+            model = pickle.load(file)
+        return model
     except Exception as e:
-        print(f"An error occurred during file creation: {e}")
+        # This should catch any remaining pickle errors
+        st.error(f"FATAL ERROR during model loading, check pickle compatibility: {e}")
+        return None
+
+predictor = load_model()
+
+# --- Application Title and Layout ---
+st.set_page_config(page_title="Vitamin C Predictor", layout="centered")
+st.title('🌡️ Vitamin C Degradation Predictor (Kinetic Model)')
+st.markdown('### Estimate Vitamin C content remaining after thermal processing.')
+
+if predictor:
+    # --- User Input Widgets ---
+    st.header('1. Select Food and Processing Parameters')
+    
+    # Crop Selection
+    crop_type = st.selectbox(
+        'Select Crop Type:',
+        options=CROP_OPTIONS,
+        key='crop'
+    )
+    
+    # Temperature Slider
+    temperature = st.slider(
+        'Processing Temperature (°C)',
+        min_value=50.0, 
+        max_value=120.0, 
+        value=85.0, 
+        step=0.5,
+        key='temp'
+    )
+    
+    # Time Slider
+    time_duration = st.slider(
+        'Processing Time (minutes)',
+        min_value=1.0, 
+        max_value=120.0, 
+        value=15.0, 
+        step=1.0,
+        key='time'
+    )
+
+    # --- Prediction Logic ---
+    st.markdown("---")
+    if st.button('Calculate Remaining Vitamin C', type="primary"):
+        
+        # Run prediction using the loaded or instantiated predictor
+        predicted_ct = predictor.predict(crop_type, temperature, time_duration)
+        
+        if predicted_ct is not None:
+            
+            # Get initial concentration for retention calculation
+            C0 = KINETIC_PARAMETERS[crop_type]['C0']
+            retention_percent = (predicted_ct / C0) * 100
+            
+            # Display Results
+            st.header('Prediction Results')
+            st.success(f"Final Vitamin C Content (Cₜ): **{predicted_ct:.2f} mg/100g**")
+            st.info(f"Initial Content (C₀): **{C0:.2f} mg/100g**")
+            st.warning(f"Retention Percentage: **{retention_percent:.2f}%**")
+        else:
+            st.error("Prediction failed. Please ensure the selected crop type is valid.")

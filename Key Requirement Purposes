@@ -1,0 +1,12 @@
+#!/bin/bash
+# setup_environment.sh
+
+echo "Setting up Vitamin C AI Predictor Environment..."
+python -m venv vitaminc_ai_env
+source vitaminc_ai_env/bin/activate  # On Windows: vitaminc_ai_env\Scripts\activate
+
+pip install --upgrade pip
+pip install -r requirements.txt
+
+echo "Environment setup complete!"
+echo "Activate with: source vitaminc_ai_env/bin/activate"

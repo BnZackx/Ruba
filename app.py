@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 # =================================================================
-# 🛑 START: CRITICAL CODE FROM YOUR TRAINING SCRIPT (The Model Class)
+# 🛑 CRITICAL CODE: CLASS AND CONSTANTS (Keep these at the top)
 # =================================================================
 
 # Gas constant in J/(mol*K)
@@ -79,18 +79,19 @@ class VitaminCPredictor:
         return max(0.0, Ct)
 
 # =================================================================
-# 🛑 END OF CRITICAL CODE FROM YOUR TRAINING SCRIPT
+# 🛑 END OF CRITICAL CODE
 # =================================================================
 
-# --- STREAMLIT APPLICATION CODE ---
+# --- STREAMLIT CONFIGURATION AND MODEL LOADING ---
 
 MODEL_FILENAME = 'vitamin_c_predictor.pkl'
 CROP_OPTIONS = list(KINETIC_PARAMETERS.keys())
 
+st.set_page_config(page_title="Vitamin C Predictor", layout="centered")
+
 @st.cache_resource
 def load_model():
     if not os.path.exists(MODEL_FILENAME):
-        # Fallback: If the .pkl is missing, instantiate the class directly 
         st.warning("Could not find the .pkl file. Using embedded KINETIC_PARAMETERS for prediction.")
         return VitaminCPredictor(KINETIC_PARAMETERS)
         
@@ -99,15 +100,25 @@ def load_model():
             model = pickle.load(file)
         return model
     except Exception as e:
-        # The error occurred here, but adding the class should fix it.
-        # We'll just display the fatal error if it still fails.
         st.error(f"FATAL ERROR during model loading, check pickle compatibility: {e}")
         return None
 
 predictor = load_model()
 
-# --- Application Title and Layout ---
-st.set_page_config(page_title="Vitamin C Predictor", layout="centered")
+# =================================================================
+# 🎓 HEADER IMPLEMENTATION
+# =================================================================
+
+st.markdown("""
+<div style="text-align: center; background-color: #f0f2f6; padding: 10px; border-radius: 5px;">
+    <h3 style="margin: 0; color: #333;">Aliko Ɗangote University of Science and Technology, Wudil</h3>
+    <p style="margin: 0; font-size: 1.1em; color: #555;">Faculty of Agriculture and Agricultural Technology</p>
+    <p style="margin: 0; font-size: 1.1em; color: #555;">Department of Food Science and Technology</p>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("---") 
+
 st.title('🌡️ Vitamin C Degradation Predictor (Kinetic Model)')
 st.markdown('### Estimate Vitamin C content remaining after thermal processing.')
 
@@ -119,7 +130,7 @@ if predictor:
     crop_type = st.selectbox(
         'Select Crop Type:',
         options=CROP_OPTIONS,
-        key='crop_selector' # CHANGED KEY
+        key='crop_selector'
     )
     
     # Temperature Slider
@@ -129,7 +140,7 @@ if predictor:
         max_value=120.0, 
         value=85.0, 
         step=0.5,
-        key='temperature_input_key' # CHANGED KEY from 'temp'
+        key='temperature_input_key'
     )
     
     # Time Slider
@@ -139,14 +150,14 @@ if predictor:
         max_value=120.0, 
         value=15.0, 
         step=1.0,
-        key='time_duration_key' # CHANGED KEY
+        key='time_duration_key'
     )
 
     # --- Prediction Logic ---
     st.markdown("---")
-    if st.button('Calculate Remaining Vitamin C', type="primary", key='predict_button_key'): # CHANGED KEY
+    if st.button('Calculate Remaining Vitamin C', type="primary", key='predict_button_key'): 
         
-        # Run prediction using the loaded or instantiated predictor
+        # Run prediction
         predicted_ct = predictor.predict(crop_type, temperature, time_duration)
         
         if predicted_ct is not None:
@@ -164,3 +175,27 @@ if predictor:
             st.warning(f"Retention Percentage: **{retention_percent:.2f}%**")
         else:
             st.error("Prediction failed. Please ensure the selected crop type is valid.")
+
+# =================================================================
+# 🦶 FOOTER IMPLEMENTATION
+# =================================================================
+
+st.markdown("""
+<style>
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #f0f2f6;
+        color: #888;
+        text-align: center;
+        padding: 5px;
+        font-size: 0.8em;
+        border-top: 1px solid #e6e6e6;
+    }
+</style>
+<div class="footer">
+    <p>© Umar Faruk Zakariyya | BnZackx®, MMXXV</p>
+</div>
+""", unsafe_allow_html=True)

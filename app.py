@@ -161,4 +161,72 @@ if predictor:
 
     # --- Prediction Logic ---
     st.markdown("---")
-    if st.button('Calculate Remaining Vitamin
+    if st.button('Calculate Remaining Vitamin C', type="primary", key='predict_button_key'): 
+        
+        # Run prediction
+        predicted_ct = predictor.predict(crop_type, temperature, time_duration)
+        
+        if predicted_ct is not None:
+            
+            # Get initial concentration for retention calculation
+            C0 = KINETIC_PARAMETERS[crop_type]['C0']
+            
+            # Calculate retention and loss
+            # Add a small check to prevent division by zero if C0 is 0
+            if C0 > 0:
+                retention_percent = (predicted_ct / C0) * 100
+            else:
+                retention_percent = 0.0
+            
+            # --- Display Results ---
+            st.header('Prediction Results')
+            st.success(f"Final Vitamin C Content (Cₜ): **{predicted_ct:.2f} mg/100g**")
+            st.info(f"Initial Content (C₀): **{C0:.2f} mg/100g**")
+            st.warning(f"Retention Percentage: **{retention_percent:.2f}%**")
+
+            # =================================================================
+            # 💡 ADAPTIVE FEEDBACK IMPLEMENTATION
+            # =================================================================
+            st.markdown("---")
+            st.subheader("Process Recommendation")
+            
+            if retention_percent >= 80:
+                st.balloons()
+                st.success(f"**Excellent Retention!** You are predicted to retain over {retention_percent:.0f}% of Vitamin C. Your current combination of **{temperature}°C** and **{time_duration} min** is highly effective for preservation.")
+                
+            elif retention_percent >= 50:
+                st.info(f"**Moderate Retention.** The retention is acceptable, but only {retention_percent:.0f}% remains. To **increase Vitamin C retention**, consider reducing the **Processing Time** or the **Temperature** by a small margin.")
+                
+            elif retention_percent >= 25:
+                st.warning(f"**Significant Degradation.** Only {retention_percent:.0f}% remains. Vitamin C loss is high at this setting. You should **immediately reduce the temperature** to below **{temperature - 10}°C** or cut the processing time significantly to preserve quality.")
+
+            else: # retention_percent < 25
+                st.error(f"**Severe Degradation!** Less than {retention_percent:.0f}% remains. Vitamin C is almost completely degraded. This thermal process is too aggressive and should be **optimized for lower temperature and much shorter duration**.")
+            # =================================================================
+
+        else:
+            st.error("Prediction failed. Please ensure the selected crop type is valid.")
+
+# =================================================================
+# 🦶 FOOTER IMPLEMENTATION (Fixed position)
+# =================================================================
+
+st.markdown("""
+<style>
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #f0f2f6;
+        color: #888;
+        text-align: center;
+        padding: 5px;
+        font-size: 0.8em;
+        border-top: 1px solid #e6e6e6;
+    }
+</style>
+<div class="footer">
+    <p>&copy; Umar Faruk Zakariyya | BnZackx&reg;, MMXXV</p>
+</div>
+""", unsafe_allow_html=True)

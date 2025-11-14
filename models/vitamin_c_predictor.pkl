@@ -1,0 +1,10 @@
+# Run training
+python src/train_model.py
+
+# Expected Output:
+# 🚀 VITAMIN C AI PREDICTOR - MODEL TRAINING
+# 📊 Loading dataset...
+# 🔧 Preprocessing data...
+# 🧠 Training Polynomial Regression Model...
+# 💾 Model saved to models/vitamin_c_predictor.pkl
+# ✅ TRAINING COMPLETED SUCCESSFULLY!

@@ -1,3 +1,92 @@
-streamlit
-numpy
-matplotlib
+# Vitamin C AI Predictor - Requirements
+# BnZackx LIMITED Research Project
+# Author: Umar Faruk Zakariyya
+
+## Core Data Science & Machine Learning
+numpy>=1.21.0
+pandas>=1.3.0
+scipy>=1.7.0
+scikit-learn>=1.0.0
+
+## Machine Learning Models & Utilities
+joblib>=1.1.0
+threadpoolctl>=3.0.0
+
+## Data Visualization
+matplotlib>=3.5.0
+seaborn>=0.11.0
+plotly>=5.5.0
+
+## Statistical Analysis
+statsmodels>=0.13.0
+
+## Jupyter/Colab Support
+jupyter>=1.0.0
+ipykernel>=6.0.0
+ipywidgets>=7.6.0
+
+## Data Handling & I/O
+openpyxl>=3.0.0
+xlrd>=2.0.0
+
+## Web Framework (for potential deployment)
+flask>=2.0.0
+flask-restful>=0.3.9
+
+## API Development
+requests>=2.25.0
+fastapi>=0.68.0
+uvicorn>=0.15.0
+
+## Code Quality & Development
+black>=21.0.0
+flake8>=3.9.0
+pytest>=6.2.0
+pytest-cov>=2.12.0
+
+## Documentation
+sphinx>=4.0.0
+sphinx-rtd-theme>=1.0.0
+
+## Alternative ML Frameworks (Optional)
+xgboost>=1.5.0
+lightgbm>=3.3.0
+
+## Deep Learning (Future Expansion)
+torch>=1.9.0
+tensorflow>=2.6.0
+
+## Additional Utilities
+tqdm>=4.60.0
+Pillow>=8.3.0
+pyyaml>=5.4.0
+
+## AppSheet Integration (Mobile App)
+gspread>=5.0.0
+oauth2client>=4.1.0
+
+## Data Validation
+pydantic>=1.8.0
+marshmallow>=3.12.0
+
+## Performance Optimization
+numba>=0.53.0
+dask>=2021.0.0
+
+## Database Support (Optional)
+sqlalchemy>=1.4.0
+psycopg2-binary>=2.9.0
+
+## Report Generation
+jupyter-client>=7.0.0
+nbconvert>=6.0.0
+pdfkit>=0.6.1
+
+## Version Control Integration
+gitpython>=3.1.0
+
+## Environment Management
+python-dotenv>=0.19.0
+
+## Cross-platform Compatibility
+pathlib2>=2.3.0; python_version < "3.4"

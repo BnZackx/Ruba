@@ -289,18 +289,18 @@ This software is proprietary and confidential. Unauthorized copying, distributio
 **Umar Faruk Zakariyya**  
 BnZackx LIMITED
 
-- 📧 Email: [BnZackx@pm.me]
-- 🔗 LinkedIn: [BnZackx]
-- 🌐 Website: [BnZackx.com]
-- 📱 GitHub: [@BnZackx]
+- 📧 Email: BnZackx@pm.me
+- 🔗 LinkedIn: BnZackx
+- 🌐 Website: BnZackx.com
+- 📱 GitHub: @BnZackx
 
 ---
 
 ## 🙏 Acknowledgments
 
-- Food Science Department, [Your Institution]
-- Research supported by [Funding Source, if applicable]
-- Special thanks to [Collaborators, if any]
+- Food Science Department, Aliko Ɗangote University of Science and Technology, Wudil 
+- Research supported by her erudite distinction, **Malam Hauwa Dauda MNIFST** 
+- Special thanks to my Family
 
 ---
 

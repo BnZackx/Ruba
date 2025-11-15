@@ -19,7 +19,7 @@ Session history of predictions
 Clear UI layout with columns
 
 
-Author: Umar Faruk Zakariyyya | BnZackx Date: 2025 """
+Author: Generated for Umar Faruk Zakariyyya | BnZackx Date: 2025 """
 
 import streamlit as st import numpy as np import pandas as pd import json import os import math import matplotlib.pyplot as plt from typing import Dict, Any, Optional import pickle
 
@@ -27,7 +27,7 @@ import streamlit as st import numpy as np import pandas as pd import json import
 
 R_GAS = 8.314  # J/(mol*K) DEFAULT_KINETIC_FILE_JSON = "kinetics.json" MODEL_FILENAME = "vitamin_c_predictor.pkl"  # optional pickle-based model
 
-Default kinetic parameters (units: C0 in mg/100g, Ea in J/mol, A in s^-1)
+# Default kinetic parameters (units: C0 in mg/100g, Ea in J/mol, A in s^-1) (units: C0 in mg/100g, Ea in J/mol, A in s^-1)
 
 DEFAULT_KINETIC_PARAMETERS: Dict[str, Dict[str, Any]] = { 'Orange (Citrus sinensis)': {'C0': 52.3, 'Ea': 68.4 * 1000, 'A': 2.34e10}, 'Baobab (Adansonia digitata)': {'C0': 225.8, 'Ea': 72.9 * 1000, 'A': 1.07e11}, 'Fluted pumpkin (Telfairia occidentalis)': {'C0': 85.2, 'Ea': 66.8 * 1000, 'A': 8.45e9}, 'Spinach (Amaranthus hybridus)': {'C0': 62.4, 'Ea': 75.2 * 1000, 'A': 3.89e11} }
 

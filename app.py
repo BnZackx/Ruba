@@ -44,9 +44,12 @@ class VitaminCPredictor:
         """Initializes the predictor with kinetic parameters."""
         self.parameters = parameters
 
-def get_rate_constant(self, crop_type, temp_celsius):
+    def get_rate_constant(self, crop_type, temp_celsius):
         """
         Calculates the degradation rate constant (k) and converts it to min⁻¹.
+        
+        The kinetic parameter A is in s⁻¹, so the result is multiplied by 60
+        to match the time input (minutes).
         """
         if crop_type not in self.parameters:
             return 0 
@@ -79,7 +82,6 @@ def get_rate_constant(self, crop_type, temp_celsius):
         k = self.get_rate_constant(crop_type, temp_celsius)
         
         # First-order kinetic model: Ct = C0 * exp(-k * t)
-        # k (min⁻¹) and t (min) have consistent units.
         Ct = C0 * np.exp(-k * time_min)
         
         return max(0.0, Ct)
@@ -112,7 +114,7 @@ def load_model():
 predictor = load_model()
 
 # =================================================================
-# 🎓 HEADER IMPLEMENTATION (NEW GREEN HEADER)
+# 🎓 HEADER IMPLEMENTATION (GREEN)
 # =================================================================
 
 st.markdown("""
@@ -171,7 +173,6 @@ if predictor:
             C0 = KINETIC_PARAMETERS[crop_type]['C0']
             
             # Calculate retention and loss
-            # Add a small check to prevent division by zero if C0 is 0
             if C0 > 0:
                 retention_percent = (predicted_ct / C0) * 100
             else:
@@ -228,4 +229,4 @@ st.markdown("""
 <div class="footer">
     <p>&copy; Umar Faruk Zakariyya | BnZackx&reg;, MMXXV</p>
 </div>
-""", unsafe_allow_html=True)
+""", unsafe_allow_html=True) 
